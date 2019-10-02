@@ -8,7 +8,8 @@
 
 import Foundation
 
-public class Watches {
+@objcMembers
+public class Watches: NSObject {
     
     /**
      Callback closure type for tock function
@@ -53,7 +54,7 @@ public extension Watches {
     /**
         Create watches instance with specific idenfitifer
      */
-    public static func create(label: String) -> Watches {
+    static func create(label: String) -> Watches {
         let watchesInstance = Watches(label: label)
         return watchesInstance
     }
@@ -61,7 +62,7 @@ public extension Watches {
     /**
         Start tracking execution time for closure
      */
-    @discardableResult public func tick(closure: (Void) -> Void) -> Watches {
+    @discardableResult func tick(closure: () -> Void) -> Watches {
         self.startTime = Date()
         closure()
         return self
@@ -70,7 +71,7 @@ public extension Watches {
     /**
         Start collecting elapsed interval for specific watches's identifier
      */
-    @discardableResult public func tock(callBack: TockCallbackClosure = defaultTockCallbackClosure) -> TimeInterval {
+    @discardableResult func tock(callBack: TockCallbackClosure = defaultTockCallbackClosure) -> TimeInterval {
         guard let validTickTime = startTime else {
             callBack(label, 0)
             return 0
@@ -100,14 +101,14 @@ public extension Watches {
     /**
         Start tracking timestamp for specific watches's identifier
      */
-    public static func tick(label: String) {
+    static func tick(label: String) {
         trackedTimeStamps[label] = Date()
     }
     
     /**
         Collect elapsed interval for specific watches's identifier
     */
-    @discardableResult public static func tock(label: String, callback: TockCallbackClosure = defaultTockCallbackClosure) -> TimeInterval {
+    @discardableResult static func tock(label: String, callback: TockCallbackClosure = defaultTockCallbackClosure) -> TimeInterval {
         guard let validTickTime = trackedTimeStamps[label] else {
             callback(label, 0)
             return 0
